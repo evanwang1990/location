@@ -1,0 +1,6 @@
+useDynLib(lawsonLoc)
+exportPattern("^[[:alpha:]]+")
+importFrom(Rcpp, evalCpp)
+importFrom(process, round)
+importFrom(RCurl, getURL)
+importFrom(rjson, fromJSON)
