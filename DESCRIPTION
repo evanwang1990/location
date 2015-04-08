@@ -13,5 +13,6 @@ Imports:
 Depends:
     process,
     RCurl,
-    rjson
+    rjson,
+    data.table
 LinkingTo: Rcpp
