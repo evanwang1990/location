@@ -43,8 +43,9 @@ create_individual_path <- function(id, loc){
   res
 }
 
-create_pathPlot <- function(title, lon, lat, id, loc){
+create_pathPlot <- function(title, id, loc){
   path <- create_individual_path(id, loc)
+  center <- loc[V1 == id, list(lon = mean(lon), lat = mean(lat))]
   res <- paste0('
 <!DOCTYPE html>
 <html>
@@ -63,7 +64,7 @@ create_pathPlot <- function(title, lon, lat, id, loc){
 </html>
 <script type="text/javascript">
     var map = new BMap.Map("allmap");
-    var point = new BMap.Point(', lon, ',', lat, ');
+    var point = new BMap.Point(', center$lon, ',', center$lat, ');
     map.centerAndZoom(point, 15);
     map.enableScrollWheelZoom();\n
   ',path, '\n</script>')
