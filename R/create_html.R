@@ -43,7 +43,7 @@ create_individual_path <- function(id, loc){
   res
 }
 
-create_pathPlot <- function(title, id, loc){
+create_pathPlot <- function(id, loc){
   path <- create_individual_path(id, loc)
   center <- loc[V1 == id, list(lon = mean(lon), lat = mean(lat))]
   res <- paste0('
@@ -56,7 +56,7 @@ create_pathPlot <- function(title, id, loc){
         body, html,#allmap {width: 100%;height: 100%;overflow: hidden;margin:0;font-family:"微软雅黑";}
     </style>
     <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=941e314f7aecfeea3c84b1f777208e7c"></script>
-    <title>', title, '</title>
+    <title>memberID_', id, 'pathPlot</title>
 </head>
 <body>
 <div id="allmap"></div>
@@ -68,5 +68,5 @@ create_pathPlot <- function(title, id, loc){
     map.centerAndZoom(point, 15);
     map.enableScrollWheelZoom();\n
   ',path, '\n</script>')
-  write(res, 'path.html')
+  write(res, paste0('path_', id, '.html'))
 }

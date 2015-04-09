@@ -9,10 +9,6 @@ handle_loc <- function(data) {
     .Call('lawsonLoc_handle_loc', PACKAGE = 'lawsonLoc', data)
 }
 
-rcpp_hello_world <- function() {
-    .Call('lawsonLoc_rcpp_hello_world', PACKAGE = 'lawsonLoc')
-}
-
 splitPath <- function(time) {
     .Call('lawsonLoc_splitPath', PACKAGE = 'lawsonLoc', time)
 }
