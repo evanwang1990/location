@@ -1,0 +1,53 @@
+---
+title: "Examples"
+author: "Evan Wang"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+## read the location records中文也可以
+```{r}
+library(lawsonLoc)
+loc <- readLoc(system.file('extdata', 'location.csv', package = 'lawsonLoc'))
+head(loc)
+```
+
+## reduce the redundant records
+```{r}
+loc <- handleLoc(loc)
+head(loc)
+```
+
+## find two places where the user appeared most frequently
+```{r}
+loc1 <- findTwoPlaces(loc, 3)
+head(loc1)
+
+#determine which is office and which is office
+loc1 <- detectOffice(loc1)
+```
+
+## get address information via longitude and latitude
+```{r}
+#getAddress function's output
+getAddress(121.5385, 31.22104)
+loc1$address <- apply(loc1[, list(lon, lat)], 1, function(x){getAddress(x[1], x[2])$detail_address})
+head(loc1)
+```
+
+## plot an individual's trajectory
+```{r}
+create_pathPlot(219, loc)
+```
+
+then you can get a html file named path219.html in the current working directory! and the trajectory is just like follows:
+
+![xx](E:\\lawson\\lawson_location_analysis\\location\\inst\\extdata\\path219.png)
+
+## plot a group of users' trajectory
+```{r}
+create_pathPlots(c(219, 42580, 42581), loc, loc1)
+```

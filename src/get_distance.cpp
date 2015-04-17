@@ -1,5 +1,6 @@
 #include <Rcpp.h>
 using namespace Rcpp;
+//get two places where the user most often appeared
 
 float getDistance(float lon1, float lat1, float lon2, float lat2)
 {
@@ -14,39 +15,22 @@ float getDistance(float lon1, float lat1, float lon2, float lat2)
 }
 
 //[[Rcpp::export]]
-DataFrame findTwoPlaces(DataFrame loc, float dis_thres)
+LogicalVector find_two_places(IntegerVector id, NumericVector lon, NumericVector lat, float dis_thres)
 {
-  IntegerVector id = loc["id"];
-  NumericVector lon = loc["lon"];
-  NumericVector lat = loc["lat"];
-  NumericVector dur = loc["dur"];
-  NumericVector wdur = loc["wdur"];
-  
-  IntegerVector id1;
-  NumericVector lon1;
-  NumericVector lat1;
-  NumericVector dur1;
-  NumericVector wdur1;
+  int len = id.size();
+  LogicalVector idx(len);
+  idx[0] = true;
   
   int ptr = 0;
   float distance;
   int count = 0;
-  id1.push_back(id[ptr]);
-  lon1.push_back(lon[ptr]);
-  lat1.push_back(lat[ptr]);
-  dur1.push_back(dur[ptr]);
-  wdur1.push_back(wdur[ptr]);
   for(int i = 1; i < id.size(); i ++)
   {
     if(id[i-1] != id[i])
     {
       ptr = i;
       count = 0;
-      id1.push_back(id[ptr]);
-      lon1.push_back(lon[ptr]);
-      lat1.push_back(lat[ptr]);
-      dur1.push_back(dur[ptr]);
-      wdur1.push_back(wdur[ptr]); 
+      idx[i] = true;
     }
     else
     {
@@ -54,16 +38,9 @@ DataFrame findTwoPlaces(DataFrame loc, float dis_thres)
       if(distance >= dis_thres)
       {
         count ++;
-        if(count < 2){
-          id1.push_back(id[i]);
-          lon1.push_back(lon[i]);
-          lat1.push_back(lat[i]);
-          dur1.push_back(dur[i]);
-          wdur1.push_back(wdur[i]);
-        }
+        if(count < 2) idx[i] = true;
       }
     }
   }
-  DataFrame res = DataFrame::create(_["id"] = id1, _["lon"] = lon1, _["lat"] = lat1, _["dur"] = dur1, _["wdur"] = wdur1);
-  return res;
+  return idx;
 }

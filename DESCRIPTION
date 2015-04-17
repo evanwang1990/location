@@ -7,12 +7,14 @@ Author: Your Name
 Maintainer: Your Name <your@email.com>
 Description: More about what it does (maybe more than one line)
 License: GPL (>= 2)
-Imports:
+Imports: 
     Rcpp (>= 0.11.3),
     data.table
-Depends:
+Depends: 
     process,
     RCurl,
     rjson,
     data.table
 LinkingTo: Rcpp
+Suggests: knitr
+VignetteBuilder: knitr

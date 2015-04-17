@@ -1,50 +1,32 @@
 #include <Rcpp.h>
 using namespace Rcpp;
-
-// Below is a simple example of exporting a C++ function to R. You can
-// source this function into an R session using the Rcpp::sourceCpp 
-// function (or via the Source button on the editor toolbar)
-
-// For more on using Rcpp click the Help button on the editor toolbar
+//the location information is uploaded every 5 sec, 
+//so it is too much if the user did't move at all
+//the function is to reduce the data and calculate
+//how long the user stayed at one place in working time and non-working time
 
 // [[Rcpp::export]]
-DataFrame handle_loc(DataFrame data)
+DataFrame handle_loc(IntegerVector id, NumericVector lon, NumericVector lat, IntegerVector time, IntegerVector worktime)
 {
-  IntegerVector id = data["V1"];
-  CharacterVector date = data["V2"];
-  NumericVector time = data["time"];
-  NumericVector lon = data["lon"];
-  NumericVector lat = data["lat"];
-  IntegerVector worktime = data["worktime"];
   
-  int len = data.size();
+  int len = lon.size();
   
-  IntegerVector id1(len);
-  CharacterVector date1(len);
-  NumericVector time1(len);
-  NumericVector lon1(len);
-  NumericVector lat1(len);
   NumericVector dur(len);
   NumericVector wdur(len);
+  NumericVector idx(len);
   
   int start = 0;
   int wstart = worktime[0] == 1 ? 0:-1;
   int wend = worktime[0] == 1 ? 0:-1;
-  float during;
-  float wduring;
   int j = 0;
-  for(int i = 1; i < id.size(); i ++)
+  
+  for(int i = 1; i < len; i ++)
   {
-    if(!((id[i] == id[i-1]) && (date[i] == date[i-1]) && (lon[i] == lon[i-1]) && (lat[i] == lat[i-1])) || ((time[i]-time[i-1]) > 1800))
+    if((lon[i] != lon[i-1]) || (lat[i] != lat[i-1]) || ((time[i]-time[i-1]) > 1800) || (id[i] != id[i-1]))
     {
-      id1[j] = id[i-1];
-      date1[j] = date[i-1];
-      lon1[j] = lon[i-1];
-      lat1[j] = lat[i-1];
-      during = time[i-1] - time[start];
-      dur[j] = during;
-      wduring =wstart >=0 ? (time[wend] - time[wstart]):0;
-      wdur[j] = wduring;
+      dur[j] = time[i-1] - time[start];
+      wdur[j] = wstart >=0 ? (time[wend] - time[wstart]):0;
+      idx[j] = i;
       //重新初始化各种指针
       j ++;
       start = i;
@@ -61,5 +43,5 @@ DataFrame handle_loc(DataFrame data)
     }
   }
   
-  return DataFrame::create(_["id"] = id1[id1 > 0], _["date"] = date1[id1 > 0], _["lon"] = lon1[id1 > 0], _["lat"] = lat1[id1 > 0], _["dur"] = dur[id1 > 0], _["wdur"] = wdur[id1 > 0]);
+  return DataFrame::create(_["idx"] = idx[idx > 0], _["dur"] = dur[idx > 0], _["wdur"] = wdur[idx > 0]);
 }

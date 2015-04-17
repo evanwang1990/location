@@ -12,7 +12,7 @@ IntegerVector splitPath(IntegerVector time)
   {
     for(int i=1; i<len; i++)
     {
-      res[i] = time[i] - time[i-1] < 1800 ? flag:(++flag);
+      res[i] = time[i] - time[i-1] < 600 ? flag:(++flag);
     }    
   }
   return res;

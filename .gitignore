@@ -1,6 +1,8 @@
 .Rproj.user
 .Rhistory
 .RData
+.csv
 src/*.o
 src/*.so
 src/*.dll
+inst/doc

@@ -1,0 +1,122 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+  <style type="text/css">
+    ul,li{list-style: none;margin:0;padding:0;float:left;font-family:"微软雅黑";}
+    html{height:100%}
+    body{height:100%;margin:0px;padding:0px;}
+    #allmap{height:93%;width:100%;}
+    #r-result{width: 100%;}
+  </style>
+  <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=941e314f7aecfeea3c84b1f777208e7c"></script>
+  <title>PathPlots</title>
+</head>
+<body>
+<div id="allmap"></div>
+<div id="r-result">
+  <form name="form" method="post" action="#">
+    select path(1~1):
+    <input type="text" name="member_id" id="member_id" />
+    <input type="button" value="Submit" onclick="fun();" />
+    member id:
+    <textarea id="demo" rows="1" cols="15"></textarea>
+  </form>
+  <p>caution: Only the paths which contains more than 5 points can be displayed and at most 5 paths can be ploted for each user</p>
+</div>
+</body>
+</html>
+<script type="text/javascript">
+  var map = new BMap.Map("allmap");
+  var point = new BMap.Point(121.433261083744,31.1995862068966);map.centerAndZoom(point, 14);
+  map.enableScrollWheelZoom();
+function fun(){
+  var id = document.getElementById("member_id").value;
+  switch (id)
+  {case "1":
+map.clearOverlays();
+var line4 = new BMap.Polyline([new BMap.Point(121.5388,31.2212),
+new BMap.Point(121.5389,31.2206),
+new BMap.Point(121.5396,31.2171),
+new BMap.Point(121.5256,31.207),
+new BMap.Point(121.5077,31.2145),
+new BMap.Point(121.5087,31.213),
+new BMap.Point(121.4887,31.2049),
+new BMap.Point(121.4686,31.1961),
+new BMap.Point(121.4499,31.1859),
+new BMap.Point(121.4414,31.1775),
+new BMap.Point(121.4348,31.1628),
+new BMap.Point(121.4182,31.1478),
+new BMap.Point(121.396,31.1259),
+new BMap.Point(121.3596,31.1165),
+new BMap.Point(121.3395,31.1),
+new BMap.Point(121.3214,31.081),
+new BMap.Point(121.2976,31.0599),
+new BMap.Point(121.2666,31.0376),
+new BMap.Point(121.2369,31.03),
+new BMap.Point(121.2367,31.0383),
+new BMap.Point(121.2376,31.0452),
+new BMap.Point(121.2373,31.0449),
+new BMap.Point(121.2379,31.0455),
+new BMap.Point(121.2348,31.0485),
+new BMap.Point(121.2233,31.0497),
+new BMap.Point(121.213,31.0498),
+new BMap.Point(121.1922,31.0483),
+new BMap.Point(121.1915,31.0458),
+new BMap.Point(121.191,31.0469),
+new BMap.Point(121.1913,31.0467)], {strokeColor:"red"});
+map.addOverlay(line4);
+var line14 = new BMap.Polyline([new BMap.Point(121.4475,31.2),
+new BMap.Point(121.4483,31.1985),
+new BMap.Point(121.4491,31.2007),
+new BMap.Point(121.4448,31.1982),
+new BMap.Point(121.4452,31.2002),
+new BMap.Point(121.4468,31.2024),
+new BMap.Point(121.4543,31.2134),
+new BMap.Point(121.4659,31.2242),
+new BMap.Point(121.4805,31.239),
+new BMap.Point(121.4799,31.2301),
+new BMap.Point(121.4815,31.239),
+new BMap.Point(121.4724,31.2456),
+new BMap.Point(121.4621,31.254),
+new BMap.Point(121.4616,31.2744),
+new BMap.Point(121.4655,31.2656),
+new BMap.Point(121.4649,31.2661),
+new BMap.Point(121.4615,31.2655)], {strokeColor:"darkgreen"});
+map.addOverlay(line14);
+var line26 = new BMap.Polyline([new BMap.Point(121.4475,31.2001),
+new BMap.Point(121.4491,31.2007),
+new BMap.Point(121.4474,31.2005),
+new BMap.Point(121.4459,31.1985),
+new BMap.Point(121.4475,31.2),
+new BMap.Point(121.4491,31.2007),
+new BMap.Point(121.4475,31.2001),
+new BMap.Point(121.4464,31.2)], {strokeColor:"darkorange"});
+map.addOverlay(line26);
+var line31 = new BMap.Polyline([new BMap.Point(121.4529,31.2217),
+new BMap.Point(121.4677,31.2269),
+new BMap.Point(121.4812,31.2284),
+new BMap.Point(121.4762,31.2259),
+new BMap.Point(121.4819,31.2387),
+new BMap.Point(121.4778,31.2411)], {strokeColor:"darkblue"});
+map.addOverlay(line31);
+var line38 = new BMap.Polyline([new BMap.Point(121.481,31.2297),
+new BMap.Point(121.4534,31.2117),
+new BMap.Point(121.4575,31.223),
+new BMap.Point(121.4868,31.2328),
+new BMap.Point(121.4762,31.2259),
+new BMap.Point(121.4819,31.2387)], {strokeColor:"chartreuse"});
+map.addOverlay(line38);
+var point = new BMap.Point(121.538,31.22);
+                var marker = new BMap.Marker(point);
+                map.addOverlay(marker);
+                var label = new BMap.Label("home",{offset:new BMap.Size(20,-10)});
+                marker.setLabel(label);document.getElementById("demo").innerHTML="219";
+break;
+
+
+}
+}
+</script>

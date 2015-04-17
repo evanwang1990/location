@@ -5,16 +5,18 @@
 
 using namespace Rcpp;
 
-// findTwoPlaces
-DataFrame findTwoPlaces(DataFrame loc, float dis_thres);
-RcppExport SEXP lawsonLoc_findTwoPlaces(SEXP locSEXP, SEXP dis_thresSEXP) {
+// find_two_places
+LogicalVector find_two_places(IntegerVector id, NumericVector lon, NumericVector lat, float dis_thres);
+RcppExport SEXP lawsonLoc_find_two_places(SEXP idSEXP, SEXP lonSEXP, SEXP latSEXP, SEXP dis_thresSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< DataFrame >::type loc(locSEXP );
+        Rcpp::traits::input_parameter< IntegerVector >::type id(idSEXP );
+        Rcpp::traits::input_parameter< NumericVector >::type lon(lonSEXP );
+        Rcpp::traits::input_parameter< NumericVector >::type lat(latSEXP );
         Rcpp::traits::input_parameter< float >::type dis_thres(dis_thresSEXP );
-        DataFrame __result = findTwoPlaces(loc, dis_thres);
+        LogicalVector __result = find_two_places(id, lon, lat, dis_thres);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
@@ -22,14 +24,18 @@ BEGIN_RCPP
 END_RCPP
 }
 // handle_loc
-DataFrame handle_loc(DataFrame data);
-RcppExport SEXP lawsonLoc_handle_loc(SEXP dataSEXP) {
+DataFrame handle_loc(IntegerVector id, NumericVector lon, NumericVector lat, IntegerVector time, IntegerVector worktime);
+RcppExport SEXP lawsonLoc_handle_loc(SEXP idSEXP, SEXP lonSEXP, SEXP latSEXP, SEXP timeSEXP, SEXP worktimeSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< DataFrame >::type data(dataSEXP );
-        DataFrame __result = handle_loc(data);
+        Rcpp::traits::input_parameter< IntegerVector >::type id(idSEXP );
+        Rcpp::traits::input_parameter< NumericVector >::type lon(lonSEXP );
+        Rcpp::traits::input_parameter< NumericVector >::type lat(latSEXP );
+        Rcpp::traits::input_parameter< IntegerVector >::type time(timeSEXP );
+        Rcpp::traits::input_parameter< IntegerVector >::type worktime(worktimeSEXP );
+        DataFrame __result = handle_loc(id, lon, lat, time, worktime);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
