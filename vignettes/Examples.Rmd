@@ -8,46 +8,97 @@ vignette: >
   \usepackage[utf8]{inputenc}
 ---
 
-## read the location records中文也可以
+### 读取位置信息
+读取位置信息并对位置信息初步处理：
+
+* 降低经纬度信息的精度至 __300m__ ，减少扰动便于计算位置密度计算
+* 计算采样时刻是否在工作时间，工作时间定义：__周一至周五,9:00~18:00__
 ```{r}
 library(lawsonLoc)
-loc <- readLoc(system.file('extdata', 'location.csv', package = 'lawsonLoc'))
-head(loc)
+loc <- readLoc(system.file('extdata', 'location.csv', package = 'lawsonLoc')) #该数据存储在lawsonLoc中
+head(loc)      #原始位置信息为V3（经度）,V4（纬度）
 ```
 
-## reduce the redundant records
+### 去除冗余位置信息
+由于重复采样、降低金纬度精度等原因，原始数据存在大量的冗余信息，需要删除这部分数据，降低计算负担
 ```{r}
-loc <- handleLoc(loc)
-head(loc)
-```
-
-## find two places where the user appeared most frequently
-```{r}
-loc1 <- findTwoPlaces(loc, 3)
-head(loc1)
-
-#determine which is office and which is office
-loc1 <- detectOffice(loc1)
-```
-
-## get address information via longitude and latitude
-```{r}
-#getAddress function's output
-getAddress(121.5385, 31.22104)
-loc1$address <- apply(loc1[, list(lon, lat)], 1, function(x){getAddress(x[1], x[2])$detail_address})
+loc1 <- handleLoc(loc)
 head(loc1)
 ```
 
-## plot an individual's trajectory
+### 找到用户经常出没的两个地点并确定住宅和办公地点
+`findTwoPlaces`中`dis_thres`参数：用户经常出没的两个地点之间的最小距离，数值单位为km
+设置`dis_thres`的目的是为了判断顾客的家庭住址和办公地址，如果不设置该参数可能出现的问题是：用户最经常出没的两个地方很近，比如公司和吃饭地点
 ```{r}
-create_pathPlot(219, loc)
+twoplaces <- findTwoPlaces(loc1, dis_thres = 3)  #dis_thres设为3km
+head(twoplaces)                                 
+
+#确定办公地点，无法判断是否是住宅或办公地点时返回NA
+homeOffice <- detectOffice(twoplaces)
+head(homeOffice)
 ```
 
-then you can get a html file named path219.html in the current working directory! and the trajectory is just like follows:
-
-![xx](E:\\lawson\\lawson_location_analysis\\location\\inst\\extdata\\path219.png)
-
-## plot a group of users' trajectory
+### 通过经纬度获取详细地址
+该函数根据百度地图API获取具体地址信息，所以 __执行该函数是必须保证良好的网络环境!__
 ```{r}
-create_pathPlots(c(219, 42580, 42581), loc, loc1)
+getAddress(121.5385, 31.22104) #函数返回列表，包括详细地址、省份、市区、街道四个部分
+twoplaces$address <- apply(twoplaces[, list(lon, lat)], 1, function(x){getAddress(x[1], x[2])$detail_address})
+head(twoplaces)
 ```
+
+### 绘制单个用户的轨迹
+参数：
+
+* `id1`：会员id，注意lawson后台数据中会员id有两种形式，一种为13位数字，记作`X`，例如1900000002123，另外一种由前面一种计算得到记作`x`，计算方法是`x=floor((X-19e11)/10)`，前例中计算得到为212
+* `loc`：地理位置数据，为了保证路径的光滑，地理数据尽可能完整，所以使用`readLoc`读取的原始数据
+
+注意：
+
+* 如果用户轨迹中的位置点数量少于5个，则不会展现出来
+
+输出文件为html文件，文件名格式为path[id].csv
+```{r}
+create_pathPlot(id1 = 219, loc = loc)
+```
+
+你可以在当前工作目录下找到path219.html的文件，即为结果。结果如下图所示：
+
+![path](E:\\lawson\\lawson_location_analysis\\location\\inst\\extdata\\path219.png)
+
+### 绘制多个用户的轨迹
+参数：
+
+* `ids`：会员id向量
+* `loc`：地理位置数据，为了保证路径的光滑，地理数据尽可能完整，所以使用`readLoc`读取的原始数据
+* `address`：用户住宅、办公地点数据，有`detectOffice`得到
+* `suffix`：添加后缀名，如果要生成多个轨迹图，添加不同的后缀能够避免文件被覆盖
+
+注意：
+
+* 不要将太多的用户同时展现在一个表内，程序设定：
+ + 当有效用户（有些用户无法绘制轨迹则不算有效用户）超过 __100__ 人时产生warning
+ + 当有效用户数超过 __1000__ 人时程序报错
+```{r}
+create_pathPlots(ids = c(219, 884, 1207), loc = loc, address = homeOffice, suffix = 'a')
+```
+
+你可以在当前工作目录下找到pathPlots_a.html的文件，即为结果。结果如下图所示：
+
+![paths](E:\\lawson\\lawson_location_analysis\\location\\inst\\extdata\\pathPlots.png)
+
+上图中下方有一个输入框`select path (1~3)`，表明有效用户数有3个，可以在输入框内输入1~3的数字。输入后点击submit按键，展现对应顾客的轨迹图，并且在`member id`框中显示该顾客的ID。
+
+每次只能展现一个用户的至多5条路径，并且将用户的家庭住址和办公地点标出。
+
+### 绘制用户住宅公司地址热力图
+```{r}
+shops <- readShop(filepath = system.file('extdata', 't_shop.csv', package = 'lawsonLoc'))
+shops <- shops[area %like% '江阴'] #仅仅显示江阴的店铺地址
+create_heatMap(loc = homeOffice, shop = shops)
+```
+
+你可以在当前工作目录下找到density.html的文件，即为结果。结果如下图所示：![density](E:\\lawson\\lawson_location_analysis\\location\\inst\\extdata\\density.png)
+
+图中最下端有六个按键，分别对应：打开住宅热力图、关闭住宅热力图、打开工作地址热力图、关闭工作地址热力图、显示店铺地址、关闭店铺地址
+
+__本包中还有两个html文件，分别演示了热力图和轨迹图:heatmap.html和pathPlots.html__

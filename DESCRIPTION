@@ -1,20 +1,21 @@
 Package: lawsonLoc
 Type: Package
-Title: What the package does (short line)
-Version: 1.0
+Title: handle the location data sampled by lawson_dian_dian App
+Version: 0.1
 Date: 2015-04-08
-Author: Your Name
-Maintainer: Your Name <your@email.com>
-Description: More about what it does (maybe more than one line)
+Author: Evan Wang
+Maintainer: Evan Wang <evanwang1990@gmail.com>
+Description: handle the location data sampled by lawson_dian_dian App
 License: GPL (>= 2)
-Imports: 
+Imports:
     Rcpp (>= 0.11.3),
     data.table
-Depends: 
+Depends:
     process,
     RCurl,
     rjson,
     data.table
 LinkingTo: Rcpp
-Suggests: knitr
+Suggests:
+    knitr
 VignetteBuilder: knitr

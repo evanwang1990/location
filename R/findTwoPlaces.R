@@ -1,3 +1,8 @@
+#'@name findTwoPlaces
+#'@title find two places where the user appeared most frequently
+#'@param data the dataset processed by function `handleLoc`
+#'@param dis_thres minimum distance between the two places where the user appeared most frequently
+#'@export
 findTwoPlaces <- function(data, dis_thres)
 {
   vars <- setdiff(c('dur', 'id', 'lon', 'lat', 'wdur'), names(data))

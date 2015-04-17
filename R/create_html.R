@@ -58,6 +58,11 @@ create_individual_path <- function(id1, loc){
   res
 }
 
+#'@name create_pathPlot
+#'@title visualize an individual's trajectory
+#'@param id the user's id
+#'@param loc the origin dataset which is read by readLoc function 
+#'@export
 create_pathPlot <- function(id1, loc){
   vars <- setdiff(c('id', 'time', 'lon', 'lat'), names(loc))
   if(length(vars) > 0) stop(paste(vars, collapse = ' '), ' are not in ', substitute(loc), '!\n')
@@ -89,6 +94,12 @@ create_pathPlot <- function(id1, loc){
   write(res, paste0('path_', id1, '.html'))
 }
 
+#'@name create_pathPlots
+#'@title visualize a group of users' trajectory
+#'@param id the users' ids
+#'@param loc the origin dataset which is read by readLoc function
+#'@details avoiding two much data in html file, I recommend no more than 1000 users's trajectory to be visualized
+#'@export
 create_pathPlots <- function(ids, loc, address, suffix = ''){
   vars <- setdiff(c('id', 'time', 'lon', 'lat'), names(loc))
   if(length(vars) > 0) stop(paste(vars, collapse = ' '), ' are not in ', substitute(loc), '!\n')
@@ -165,6 +176,11 @@ create_pathPlots <- function(ids, loc, address, suffix = ''){
 write(res, paste0('pathPlots_', suffix, '.html'))
 }
 
+#'@name create_heatMap
+#'@title create heatmap of user's home and office
+#'@param loc the dataset which is produced by detectOffice
+#'@param shop the shop address dataset read by readShop function
+#'@export
 create_heatMap <- function(loc, shop){
   vars <- setdiff(c('place', 'lon', 'lat'), names(loc))
   if(length(vars) > 0) stop(paste(vars, collapse = ' '), ' are not in ', substitute(loc), '!\n')

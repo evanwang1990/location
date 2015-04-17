@@ -1,3 +1,6 @@
+#'@name readLoc
+#'@title read location dataset
+#'@export
 readLoc <- function(filepath, header = T)
 {
   require(lubridate, quietly = T)
@@ -19,6 +22,9 @@ readLoc <- function(filepath, header = T)
   loc
 }
 
+#'@name readShop
+#'@title read lawson shops' location data
+#'@export
 readShop <- function(filepath, header = T)
 {
   shops <- fread(filepath, header = header, select = c(4, 8:10))

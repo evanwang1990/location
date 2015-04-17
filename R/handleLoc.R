@@ -1,3 +1,8 @@
+#'@name handleLoc
+#'@title handle the location information
+#'@description reduce the redundant location information and calculate the time a user stayed in one place
+#'@param data the dataset read by read.loc
+#'@export
 handleLoc <- function(data)
 {
   vars <- setdiff(c('id', 'lon', 'lat', 'time', 'worktime'), names(data))
